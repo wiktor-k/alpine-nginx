@@ -2,7 +2,7 @@ FROM alpine:3.3
 
 MAINTAINER Wiktor <wiktor@metacode.biz>
 
-ENV NGINX_VERSION nginx-1.9.11
+ENV NGINX_VERSION nginx-1.10.0
 
 RUN apk --update add openssl-dev pcre-dev zlib-dev wget build-base && \
     mkdir -p /tmp/src && \
