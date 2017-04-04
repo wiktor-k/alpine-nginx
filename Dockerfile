@@ -1,6 +1,6 @@
 FROM alpine:3.3
 
-MAINTAINER Wiktor <wiktor@metacode.biz>
+LABEL maintainer "Metacode <contact@metacode.biz>"
 
 ENV NGINX_VERSION nginx-1.11.2
 
