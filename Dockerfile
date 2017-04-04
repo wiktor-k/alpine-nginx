@@ -1,8 +1,8 @@
-FROM alpine:3.3
+FROM alpine:3.5
 
 LABEL maintainer "Metacode <contact@metacode.biz>"
 
-ENV NGINX_VERSION nginx-1.11.2
+ENV NGINX_VERSION nginx-1.11.12
 
 RUN apk --update add openssl-dev pcre-dev zlib-dev wget build-base ca-certificates && \
     mkdir -p /tmp/src && \
