@@ -15,7 +15,7 @@ RUN apk --update add openssl-dev pcre-dev zlib-dev wget build-base ca-certificat
         --with-http_gzip_static_module \
         --with-http_v2_module \
         --with-ipv6 \
-        --prefix=/etc/nginx \
+        --prefix=/nginx \
         --http-log-path=/var/log/nginx/access.log \
         --error-log-path=/var/log/nginx/error.log && \
     make && \
@@ -30,4 +30,4 @@ VOLUME ["/var/log/nginx"]
 
 EXPOSE 80 443
 
-CMD ["/etc/nginx/sbin/nginx", "-g", "daemon off;"]
+CMD ["/nginx/sbin/nginx", "-g", "daemon off;"]
