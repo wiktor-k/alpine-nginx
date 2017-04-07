@@ -69,7 +69,6 @@ RUN apk --update add \
         ca-certificates \
         gnupg \
         linux-headers \
-        pcre-dev \
         wget \
         zlib-dev \
     && \
