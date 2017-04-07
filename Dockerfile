@@ -5,11 +5,11 @@ LABEL maintainer "Metacode <contact@metacode.biz>"
 ENV NGINX_VERSION 1.11.12
 
 RUN apk --update add openssl-dev pcre-dev zlib-dev wget build-base ca-certificates && \
-    mkdir -p /tmp/src && \
-    cd /tmp/src && \
+    mkdir -p /tmp/src/nginx && \
+    cd /tmp/src/nginx && \
     wget https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxvf nginx-${NGINX_VERSION}.tar.gz && \
-    cd /tmp/src/nginx-${NGINX_VERSION} && \
+    cd /tmp/src/nginx/nginx-${NGINX_VERSION} && \
     ./configure \
         --with-http_ssl_module \
         --with-http_gzip_static_module \
