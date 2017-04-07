@@ -2,14 +2,14 @@ FROM alpine:3.4
 
 LABEL maintainer "Metacode <contact@metacode.biz>"
 
-ENV NGINX_VERSION nginx-1.11.12
+ENV NGINX_VERSION 1.11.12
 
 RUN apk --update add openssl-dev pcre-dev zlib-dev wget build-base ca-certificates && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
-    wget https://nginx.org/download/${NGINX_VERSION}.tar.gz && \
-    tar -zxvf ${NGINX_VERSION}.tar.gz && \
-    cd /tmp/src/${NGINX_VERSION} && \
+    wget https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
+    tar -zxvf nginx-${NGINX_VERSION}.tar.gz && \
+    cd /tmp/src/nginx-${NGINX_VERSION} && \
     ./configure \
         --with-http_ssl_module \
         --with-http_gzip_static_module \
