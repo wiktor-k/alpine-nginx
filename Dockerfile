@@ -3,13 +3,13 @@ FROM alpine:3.5
 LABEL maintainer "Metacode <contact@metacode.biz>"
 
 # https://www.libressl.org/releases.html
-ENV LIBRESSL_VERSION 2.5.1
+ENV LIBRESSL_VERSION 2.5.4
 
 # https://www.libressl.org/signing.html
 ENV LIBRESSL_SIGNING A1EB079B8D3EB92B4EBD3139663AF51BD5E4D8D5
 
 # https://nginx.org/en/download.html
-ENV NGINX_VERSION 1.11.12
+ENV NGINX_VERSION 1.13.2
 
 # https://nginx.org/en/pgp_keys.html
 ENV NGINX_SIGNING \

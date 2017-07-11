@@ -21,7 +21,7 @@ Below is a sample Docker Compose file:
 
 ```yaml
 web:
-    image: "wiktork/alpine-nginx:1.11.12-3.5-2.5.1"
+    image: "wiktork/alpine-nginx:1.13.2-3.5-2.5.4"
     command: ["/nginx/sbin/nginx", "-g", "daemon off;", "-c", "/configuration/nginx.conf"]
     ports:
       - "80:80"
