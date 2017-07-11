@@ -1,4 +1,4 @@
-FROM alpine:3.5
+FROM alpine:3.5 AS builder
 
 LABEL maintainer "Metacode <contact@metacode.biz>"
 
@@ -25,10 +25,10 @@ RUN apk --update add \
         linux-headers \
         pcre-dev \
         wget \
-        zlib-dev \
-    && \
+        zlib-dev
 
-    # Download LibreSSL
+# Download LibreSSL
+RUN \
     mkdir -p /tmp/src/ssl && \
     cd /tmp/src/ssl && \
     wget \
@@ -37,9 +37,10 @@ RUN apk --update add \
     && \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys ${LIBRESSL_SIGNING} && \
     gpg --verify libressl-${LIBRESSL_VERSION}.tar.gz.asc && \
-    tar -zxvf libressl-${LIBRESSL_VERSION}.tar.gz && \
+    tar -zxvf libressl-${LIBRESSL_VERSION}.tar.gz
 
-    # Download NginX
+# Download NginX
+RUN \
     mkdir -p /tmp/src/nginx && \
     cd /tmp/src/nginx && \
     wget \
@@ -48,36 +49,29 @@ RUN apk --update add \
     && \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys ${NGINX_SIGNING} && \
     gpg --verify nginx-${NGINX_VERSION}.tar.gz.asc && \
-    tar -zxvf nginx-${NGINX_VERSION}.tar.gz && \
-    cd /tmp/src/nginx/nginx-${NGINX_VERSION} && \
+    tar -zxvf nginx-${NGINX_VERSION}.tar.gz
 
-    # Configure and install
+# Configure and install
+RUN \
+    cd /tmp/src/nginx/nginx-${NGINX_VERSION} && \
     ./configure \
+        --with-cc-opt="-static -static-libgcc" \
+        --with-ld-opt="-static" \
         --with-http_ssl_module \
         --with-http_gzip_static_module \
         --with-http_v2_module \
         --with-openssl=/tmp/src/ssl/libressl-${LIBRESSL_VERSION} \
         --prefix=/nginx \
-        --http-log-path=/var/log/nginx/access.log \
-        --error-log-path=/var/log/nginx/error.log && \
-    make && \
-    make install && \
+        --http-log-path=/dev/stdout \
+        --error-log-path=/dev/stderr && \
 
-    # Remove build dependencies
-    apk del \
-        build-base \
-        ca-certificates \
-        gnupg \
-        linux-headers \
-        wget \
-        zlib-dev \
-    && \
-    rm -rf /tmp/src && \
-    rm -rf /var/cache/apk/* && \
+    # with -j > 1 nginx's tries to link openssl before it gets built
+    make -j1 && \
+    make install
 
-    # Link logs to stdout & stderr for Docker
-    ln -sf /dev/stdout /var/log/nginx/access.log && \
-    ln -sf /dev/stderr /var/log/nginx/error.log
+FROM alpine:3.5
+
+COPY --from=builder /nginx /nginx
 
 VOLUME ["/var/log/nginx"]
 
