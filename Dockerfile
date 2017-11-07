@@ -3,13 +3,13 @@ FROM alpine:3.5 AS builder
 LABEL maintainer "Metacode <contact@metacode.biz>"
 
 # https://www.libressl.org/releases.html
-ENV LIBRESSL_VERSION 2.5.4
+ENV LIBRESSL_VERSION 2.6.3
 
 # https://www.libressl.org/signing.html
 ENV LIBRESSL_SIGNING A1EB079B8D3EB92B4EBD3139663AF51BD5E4D8D5
 
 # https://nginx.org/en/download.html
-ENV NGINX_VERSION 1.13.2
+ENV NGINX_VERSION 1.13.6
 
 # https://nginx.org/en/pgp_keys.html
 ENV NGINX_SIGNING \
@@ -72,7 +72,6 @@ RUN \
         --prefix=/nginx \
         --http-log-path=/dev/stdout \
         --error-log-path=/dev/stderr && \
-
     # with -j > 1 nginx's tries to link openssl before it gets built
     make -j1 && \
     make install
