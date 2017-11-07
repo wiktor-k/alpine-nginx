@@ -35,7 +35,7 @@ RUN \
         https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz \
         https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz.asc \
     && \
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys ${LIBRESSL_SIGNING} && \
+    gpg --recv-keys ${LIBRESSL_SIGNING} && \
     gpg --verify libressl-${LIBRESSL_VERSION}.tar.gz.asc && \
     tar -zxvf libressl-${LIBRESSL_VERSION}.tar.gz
 
@@ -47,7 +47,7 @@ RUN \
         https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz \
         https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz.asc \
     && \
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys ${NGINX_SIGNING} && \
+    gpg --recv-keys ${NGINX_SIGNING} && \
     gpg --verify nginx-${NGINX_VERSION}.tar.gz.asc && \
     tar -zxvf nginx-${NGINX_VERSION}.tar.gz
 
