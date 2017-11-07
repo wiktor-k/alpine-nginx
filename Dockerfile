@@ -35,8 +35,12 @@ RUN \
         https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz \
         https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz.asc \
     && \
-    gpg --recv-keys ${LIBRESSL_SIGNING} && \
-    gpg --verify libressl-${LIBRESSL_VERSION}.tar.gz.asc && \
+    gpg \
+        --homedir /tmp/src/ssl --keyserver hkp://keyserver.ubuntu.com:80 --no-default-keyring --keyring /tmp/libressl.gpg \
+        --recv-keys ${LIBRESSL_SIGNING} && \
+    gpg \
+        --homedir /tmp/src/ssl --keyserver hkp://keyserver.ubuntu.com:80 --no-default-keyring --keyring /tmp/libressl.gpg \
+        --verify libressl-${LIBRESSL_VERSION}.tar.gz.asc && \
     tar -zxvf libressl-${LIBRESSL_VERSION}.tar.gz
 
 # Download NginX
@@ -47,8 +51,12 @@ RUN \
         https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz \
         https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz.asc \
     && \
-    gpg --recv-keys ${NGINX_SIGNING} && \
-    gpg --verify nginx-${NGINX_VERSION}.tar.gz.asc && \
+    gpg \
+        --homedir /tmp/src/nginx --keyserver hkp://keyserver.ubuntu.com:80 --no-default-keyring --keyring /tmp/nginx.gpg \
+        --recv-keys ${NGINX_SIGNING} && \
+    gpg \
+        --homedir /tmp/src/nginx --keyserver hkp://keyserver.ubuntu.com:80 --no-default-keyring --keyring /tmp/nginx.gpg \
+        --verify nginx-${NGINX_VERSION}.tar.gz.asc && \
     tar -zxvf nginx-${NGINX_VERSION}.tar.gz
 
 # Configure and install
