@@ -1,4 +1,4 @@
-FROM alpine:3.5 AS builder
+FROM alpine:3.8 AS builder
 
 LABEL maintainer "Metacode <contact@metacode.biz>"
 
@@ -76,7 +76,7 @@ RUN \
     make -j1 && \
     make install
 
-FROM alpine:3.5
+FROM alpine:3.8
 
 COPY --from=builder /nginx /nginx
 
