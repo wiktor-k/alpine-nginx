@@ -2,11 +2,17 @@ FROM alpine:3.8 AS builder
 
 LABEL maintainer "Metacode <contact@metacode.biz>"
 
-# https://www.libressl.org/releases.html
-ENV LIBRESSL_VERSION 2.6.3
+# https://www.openssl.org/source/
+ENV OPENSSL_VERSION 1.1.1
 
-# https://www.libressl.org/signing.html
-ENV LIBRESSL_SIGNING A1EB079B8D3EB92B4EBD3139663AF51BD5E4D8D5
+# https://www.openssl.org/community/omc.html
+ENV OPENSSL_SIGNING \
+    8657ABB260F056B1E5190839D9C4D26D0E604491 \
+    5B2545DAB21995F4088CEFAA36CEE4DEB00CFE33 \
+    ED230BEC4D4F2518B9D7DF41F0DB4D21C1D35231 \
+    C1F33DD8CE1D4CC613AF14DA9195C48241FBF7DD \
+    7953AC1FBC3DC8B3B292393ED5E9E43F7DF9EE8C \
+    E5E52560DD91C556DDBDA5D02064C53641C25E5D
 
 # https://nginx.org/en/download.html
 ENV NGINX_VERSION 1.13.6
@@ -27,21 +33,23 @@ RUN apk --update add \
         wget \
         zlib-dev
 
-# Download LibreSSL
+# Download OpenSSL
 RUN \
-    mkdir -p /tmp/src/ssl && \
-    cd /tmp/src/ssl && \
+    mkdir -p /src/ssl && \
+    cd /src/ssl && \
     wget \
-        https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz \
-        https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz.asc \
+        https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz \
+        https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz.asc \
     && \
     gpg \
-        --homedir /tmp/src/ssl --keyserver hkp://keyserver.ubuntu.com:80 --no-default-keyring --keyring /tmp/libressl.gpg \
-        --recv-keys ${LIBRESSL_SIGNING} && \
+        --homedir /src/ssl --keyserver hkps://keyserver.ubuntu.com --no-default-keyring --keyring /src/openssl.gpg \
+        --recv-keys ${OPENSSL_SIGNING} && \
     gpg \
-        --homedir /tmp/src/ssl --keyserver hkp://keyserver.ubuntu.com:80 --no-default-keyring --keyring /tmp/libressl.gpg \
-        --verify libressl-${LIBRESSL_VERSION}.tar.gz.asc && \
-    tar -zxvf libressl-${LIBRESSL_VERSION}.tar.gz
+        --homedir /src/ssl --keyserver hkps://keyserver.ubuntu.com --no-default-keyring --keyring /src/openssl.gpg \
+        --no-auto-key-locate --verify openssl-${OPENSSL_VERSION}.tar.gz.asc
+
+RUN cd /src/ssl && \
+    tar -zxvf openssl-${OPENSSL_VERSION}.tar.gz
 
 # Download NginX
 RUN \
@@ -68,7 +76,10 @@ RUN \
         --with-http_ssl_module \
         --with-http_gzip_static_module \
         --with-http_v2_module \
-        --with-openssl=/tmp/src/ssl/libressl-${LIBRESSL_VERSION} \
+        --with-openssl=/src/ssl/openssl-${OPENSSL_VERSION} \
+        # Alpine uses musl that doesn't have `getcontext` so disable async
+        # see: https://github.com/openssl/openssl/commit/52739e40ccc1b16cd966ea204bcfea3cc874fec8
+        --with-openssl-opt=no-async \
         --prefix=/nginx \
         --http-log-path=/dev/stdout \
         --error-log-path=/dev/stderr && \
