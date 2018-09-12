@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/wiktor-k/alpine-nginx.svg?branch=master)](https://travis-ci.org/wiktor-k/alpine-nginx)
 
-Latest Nginx on latest Alpine with latest LibreSSL.
+Latest Nginx on latest Alpine with latest OpenSSL.
 
 For exact versions see the Dockerfile.
 
