@@ -75,8 +75,9 @@ RUN \
     ./configure \
         --with-cc-opt="-static -static-libgcc" \
         --with-ld-opt="-static" \
-        --with-http_ssl_module \
+        --with-http_auth_request_module \
         --with-http_gzip_static_module \
+        --with-http_ssl_module \
         --with-http_v2_module \
         --with-openssl=/src/ssl/openssl-${OPENSSL_VERSION} \
         # Alpine uses musl that doesn't have `getcontext` so disable async
