@@ -15,7 +15,7 @@ ENV OPENSSL_SIGNING \
     E5E52560DD91C556DDBDA5D02064C53641C25E5D
 
 # https://nginx.org/en/download.html
-ENV NGINX_VERSION 1.13.6
+ENV NGINX_VERSION 1.15.3
 
 # https://nginx.org/en/pgp_keys.html
 ENV NGINX_SIGNING \
@@ -29,8 +29,8 @@ RUN apk --update add \
         ca-certificates \
         gnupg \
         linux-headers \
+        perl \
         pcre-dev \
-        wget \
         zlib-dev
 
 # Download OpenSSL
@@ -53,23 +53,25 @@ RUN cd /src/ssl && \
 
 # Download NginX
 RUN \
-    mkdir -p /tmp/src/nginx && \
-    cd /tmp/src/nginx && \
+    mkdir -p /src/nginx && \
+    cd /src/nginx && \
     wget \
         https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz \
         https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz.asc \
     && \
     gpg \
-        --homedir /tmp/src/nginx --keyserver hkp://keyserver.ubuntu.com:80 --no-default-keyring --keyring /tmp/nginx.gpg \
+        --homedir /src/nginx --keyserver hkps://keyserver.ubuntu.com --no-default-keyring --keyring /src/nginx.gpg \
         --recv-keys ${NGINX_SIGNING} && \
     gpg \
-        --homedir /tmp/src/nginx --keyserver hkp://keyserver.ubuntu.com:80 --no-default-keyring --keyring /tmp/nginx.gpg \
-        --verify nginx-${NGINX_VERSION}.tar.gz.asc && \
+        --homedir /src/nginx --keyserver hkps://keyserver.ubuntu.com --no-default-keyring --keyring /src/nginx.gpg \
+        --no-auto-key-locate --verify nginx-${NGINX_VERSION}.tar.gz.asc
+
+RUN cd /src/nginx && \
     tar -zxvf nginx-${NGINX_VERSION}.tar.gz
 
 # Configure and install
 RUN \
-    cd /tmp/src/nginx/nginx-${NGINX_VERSION} && \
+    cd /src/nginx/nginx-${NGINX_VERSION} && \
     ./configure \
         --with-cc-opt="-static -static-libgcc" \
         --with-ld-opt="-static" \
