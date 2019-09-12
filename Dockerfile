@@ -15,7 +15,7 @@ ENV OPENSSL_SIGNING \
     E5E52560DD91C556DDBDA5D02064C53641C25E5D
 
 # https://nginx.org/en/download.html
-ENV NGINX_VERSION 1.15.3
+ENV NGINX_VERSION 1.17.3
 
 # https://nginx.org/en/pgp_keys.html
 ENV NGINX_SIGNING \
