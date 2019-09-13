@@ -1,9 +1,9 @@
-FROM alpine:3.8 AS builder
+FROM alpine:3.10 AS builder
 
 LABEL maintainer "Metacode <contact@metacode.biz>"
 
 # https://www.openssl.org/source/
-ENV OPENSSL_VERSION 1.1.1
+ENV OPENSSL_VERSION 1.1.1d
 
 # https://www.openssl.org/community/omc.html
 ENV OPENSSL_SIGNING \
@@ -90,7 +90,7 @@ RUN \
     make -j1 && \
     make install
 
-FROM alpine:3.8
+FROM alpine:3.10
 
 COPY --from=builder /nginx /nginx
 
